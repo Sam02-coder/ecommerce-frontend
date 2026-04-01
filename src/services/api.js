@@ -4,13 +4,13 @@ import toast from 'react-hot-toast'
 // ── Base URL from environment ────────────────────────────────────────────────
 // In development, Vite proxies /api → localhost:8080 (see vite.config.js)
 // In production, set VITE_API_BASE_URL to your backend URL, e.g. https://api.shopzen.in
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-console.log("BASE_URL:", BASE_URL);
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
+
 // ── Axios instance ────────────────────────────────────────────────────────────
 const api = axios.create({
   baseURL: BASE_URL,
   headers: { 'Content-Type': 'application/json' },
-  timeout: 60000,
+  timeout: 15_000,
 })
 
 // ── Request interceptor — attach JWT ─────────────────────────────────────────
@@ -136,6 +136,8 @@ export const authAPI = {
   login:          (data) => api.post('/auth/login', data),
   refresh:        (data) => api.post('/auth/refresh', data),
   changePassword: (data) => api.put('/auth/change-password', data),
+  forgotPassword: (data) => api.post('/auth/forgot-password', data),
+  resetPassword:  (data) => api.post('/auth/reset-password', data),
 }
 
 // ── Products ──────────────────────────────────────────────────────────────────

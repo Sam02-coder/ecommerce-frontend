@@ -8,6 +8,7 @@ import { orderAPI, addressAPI } from '../services/api'
 import { useRazorpay } from '../hooks/useRazorpay'
 import { formatCurrency } from '../utils/helpers'
 import { usePageMeta } from '../hooks/useMeta'
+import { calculateShipping, calculateTax, FREE_SHIPPING_THRESHOLD } from '../utils/constants'
 import toast from 'react-hot-toast'
 
 const FALLBACK_IMAGE = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%23f3f4f6'/%3E%3C/svg%3E`
@@ -69,8 +70,8 @@ export default function CheckoutPage() {
     return null
   }
 
-  const shipping = cart.totalPrice >= 500 ? 0 : 50
-  const tax = cart.totalPrice * 0.18
+  const shipping = calculateShipping(cart.totalPrice)
+  const tax = calculateTax(cart.totalPrice)
   const discount = couponData?.discountAmount || 0
   const total = cart.totalPrice + shipping + tax - discount
 

@@ -6,6 +6,7 @@ import { useAuthStore } from '../store/authStore'
 import { formatCurrency } from '../utils/helpers'
 import { PageLoader } from '../components/common/Skeleton'
 import { usePageMeta } from '../hooks/useMeta'
+import { calculateShipping, calculateTax, FREE_SHIPPING_THRESHOLD } from '../utils/constants'
 import ConfirmDialog from '../components/common/ConfirmDialog'
 
 const FALLBACK_IMAGE = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f3f4f6'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='system-ui' font-size='10' fill='%239ca3af'%3ENo Image%3C/text%3E%3C/svg%3E`
@@ -43,8 +44,8 @@ export default function CartPage() {
     </div>
   )
 
-  const shipping = cart.totalPrice >= 500 ? 0 : 50
-  const tax = cart.totalPrice * 0.18
+  const shipping = calculateShipping(cart.totalPrice)
+  const tax = calculateTax(cart.totalPrice)
   const total = cart.totalPrice + shipping + tax
 
   const handleRemoveConfirm = (itemId, name) => {
@@ -172,7 +173,7 @@ export default function CartPage() {
 
             {shipping > 0 && (
               <p className="bg-orange-50 text-orange-600 text-xs font-medium p-3 rounded-xl mt-4" role="note">
-                Add {formatCurrency(500 - cart.totalPrice)} more for free shipping!
+                Add {formatCurrency(FREE_SHIPPING_THRESHOLD - cart.totalPrice)} more for free shipping!
               </p>
             )}
 

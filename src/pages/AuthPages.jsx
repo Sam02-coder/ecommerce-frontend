@@ -181,13 +181,6 @@ export function LoginPage() {
             </button>
           </form>
 
-          {/* Demo credentials — remove in production */}
-          <div className="mt-5 p-3 bg-gray-50 rounded-xl" role="note" aria-label="Demo credentials">
-            <p className="text-xs text-gray-500 text-center">
-              Demo: <code className="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-xs">admin@ecommerce.com</code>
-              {' '}/ <code className="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-xs">password123</code>
-            </p>
-          </div>
         </div>
 
         <p className="text-center text-sm text-gray-500 mt-5">

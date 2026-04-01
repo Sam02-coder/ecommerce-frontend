@@ -278,7 +278,7 @@ export default function AdminPage() {
                           </td>
                           <td className="px-5 py-3.5">
                             <div className="flex items-center gap-3">
-                              <Link to={`/products/${p.slug}`} className="text-blue-600 hover:text-blue-800 transition-colors" aria-label={`View ${p.name}`}>
+                              <Link to={`/admin/products/edit/${p.id}`} className="text-blue-600 hover:text-blue-800 transition-colors" aria-label={`Edit ${p.name}`}>
                                 <Edit2 size={14} />
                               </Link>
                               <button

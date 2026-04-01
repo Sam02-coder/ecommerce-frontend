@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { ArrowLeft, Save, Upload, X, Plus } from 'lucide-react'
 import { productAPI, categoryAPI } from '../services/api'
 import { usePageMeta } from '../hooks/useMeta'
+import { usePageLeave } from '../hooks/useUtils'
 import { PageLoader } from '../components/common/Skeleton'
 import toast from 'react-hot-toast'
 
@@ -39,6 +40,17 @@ export default function AdminProductFormPage() {
   const [errors, setErrors] = useState({})
   const [saving, setSaving] = useState(false)
   const [slugManual, setSlugManual] = useState(false)
+  const [isDirty, setIsDirty]     = useState(false)
+  const { enable: guardPage, disable: unguardPage } = usePageLeave(
+    'You have unsaved changes. Are you sure you want to leave?'
+  )
+
+  // Enable navigation guard when form is dirty
+  useEffect(() => {
+    if (isDirty) guardPage()
+    else unguardPage()
+    return () => unguardPage()
+  }, [isDirty, guardPage, unguardPage])
   const [newAttrKey, setNewAttrKey] = useState('')
   const [newAttrVal, setNewAttrVal] = useState('')
 
@@ -78,7 +90,10 @@ export default function AdminProductFormPage() {
     }
   }, [productData])
 
+  const markDirty = useCallback(() => setIsDirty(true), [])
+
   const update = (field) => (e) => {
+    markDirty()
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value
     setForm((prev) => {
       const next = { ...prev, [field]: value }
@@ -132,6 +147,8 @@ export default function AdminProductFormPage() {
         await productAPI.create(payload)
         toast.success('Product created!')
       }
+      setIsDirty(false)
+      unguardPage()
       navigate('/admin')
     } catch {
       // Error toast shown by API interceptor
